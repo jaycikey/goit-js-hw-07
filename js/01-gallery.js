@@ -3,7 +3,7 @@ import { galleryItems } from "./gallery-items.js";
 
 const gallery = document.querySelector(".gallery");
 
-function createGalleyItem(item) {
+function createGalleryItem(item) {
   // Створеня єлементу списку для картинки
   const galleryItem = document.createElement("li");
   galleryItem.classList.add("gallery_item");
@@ -25,10 +25,10 @@ function createGalleyItem(item) {
   galleryLink.appendChild(galleryImage);
 
   return galleryItem;
-}
+};
 
 // Переберання массиву
-const galleryItem = galleryItems.map((item) => createGalleyItem(item));
+const galleryItem = galleryItems.map((item) => createGalleryItem(item));
 
 // Розгортання(spread) та додавання в DOM
 gallery.append(...galleryItem);
@@ -45,7 +45,7 @@ gallery.addEventListener("click", (event) => {
   // Обробка кліка тільки по картинці
   if (event.target.nodeName !== "IMG") {
     return;
-  }
+  };
 
   // Відкриття модального вікна
   const instance = basicLightbox.create(`
@@ -58,6 +58,6 @@ gallery.addEventListener("click", (event) => {
   window.addEventListener("keydown", (event) => {
     if(event.key === "Escape"){
         instance.close();
-    }
+    };
   });
 });
