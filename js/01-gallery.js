@@ -1,63 +1,67 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const gallery = document.querySelector(".gallery");
-
 function createGalleryItem(item) {
-  // Створеня єлементу списку для картинки
-  const galleryItem = document.createElement("li");
-  galleryItem.classList.add("gallery_item");
-
-  // Створення линки для картинки
-  const galleryLink = document.createElement("a");
-  galleryLink.classList.add("gallery__link");
-  galleryLink.href = item.original;
-
-  // Створення картинки
-  const galleryImage = document.createElement("img");
-  galleryImage.classList.add("gallery__image");
-  galleryImage.src = item.preview;
-  galleryImage.setAttribute("data-source", item.original);
-  galleryImage.alt = item.description;
-
-  // Огортаємо
-  galleryItem.appendChild(galleryLink);
-  galleryLink.appendChild(galleryImage);
-
-  return galleryItem;
-};
+  return `
+    <li class="gallery_item">
+      <a class="gallery__link" href="${item.original}">
+        <img
+          class="gallery__image"
+          src="${item.preview}"
+          data-source="${item.original}"
+          alt="${item.description}"
+        />
+      </a>
+    </li>
+  `;
+}
 
 // Переберання массиву
-const galleryItem = galleryItems.map((item) => createGalleryItem(item));
+const galleryItem = galleryItems
+  .map((item) => createGalleryItem(item))
+  .join("");
 
 // Розгортання(spread) та додавання в DOM
-gallery.append(...galleryItem);
+const gallery = document.querySelector(".gallery");
+gallery.innerHTML = galleryItem;
 
-// Слухач на ul
+// Додаємо слухач подій на галерею
 gallery.addEventListener("click", (event) => {
-  // Вимикання дефолтної події
   event.preventDefault();
 
-  // Отримання лінки на велике зображення та опису
-  const largeImageLink = event.target.dataset.source;
-  const imgAlt = event.target.alt;
+  const target = event.target;
+  const isImage = target.nodeName === "IMG";
 
-  // Обробка кліка тільки по картинці
-  if (event.target.nodeName !== "IMG") {
+  if (!isImage) {
     return;
-  };
+  }
 
-  // Відкриття модального вікна
+  const largeImageLink = target.dataset.source;
+  const imgAlt = target.alt;
+
+  function closeModal() {
+    instance.close();
+    window.removeEventListener("keydown", onKeyPress);
+    window.removeEventListener("click", onOverlayClick);
+  }
+
+  function onKeyPress(event) {
+    if (event.key === "Escape") {
+      closeModal();
+    }
+  }
+
+  function onOverlayClick(event) {
+    if (event.target.className.includes("basicLightbox")) {
+      closeModal();
+    }
+  }
+
   const instance = basicLightbox.create(`
-  <img src="${largeImageLink}" alt = "${imgAlt}" />
+    <img src="${largeImageLink}" alt="${imgAlt}" />
   `);
 
   instance.show();
-
-  // Закриття модального вікна клавішею Esc
-  window.addEventListener("keydown", (event) => {
-    if(event.key === "Escape"){
-        instance.close();
-    };
-  });
+  window.addEventListener("keydown", onKeyPress);
+  window.addEventListener("click", onOverlayClick);
 });
