@@ -20,8 +20,8 @@ function createGalleryItem(item) {
 const galleryItem = galleryItems.map((item) => createGalleryItem(item));
 
 // Додавання елементів галереї до DOM
-const gallery = document.querySelector(".gallery").join("");
-gallery.append(...galleryItem);
+const gallery = document.querySelector(".gallery");
+gallery.innerHTML = galleryItem;
 
 // Ініціалізація бібліотеки SimpleLightbox
 const lightbox = new SimpleLightbox(".gallery__item a", {
