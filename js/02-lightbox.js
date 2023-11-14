@@ -17,7 +17,7 @@ function createGalleryItem(item) {
 }
 
 // Перебор массиву
-const galleryItem = galleryItems.map((item) => createGalleryItem(item));
+const galleryItem = galleryItems.map((item) => createGalleryItem(item)).join("");;
 
 // Додавання елементів галереї до DOM
 const gallery = document.querySelector(".gallery");
